@@ -11,6 +11,7 @@ import { TicketService, Ticket } from './shared';
 export class PoolComponent implements OnInit {
   tickets: Observable<Ticket[]>;
   ticketsDrawn: Observable<Ticket[]>;
+  amountToDraw: number = 2;
   ticketsString: string = '';
 
   constructor(
@@ -42,7 +43,7 @@ export class PoolComponent implements OnInit {
     this.tickets = this.ticketService.replace(tickets);
   }
 
-  draw() {
-    this.ticketsDrawn = this.ticketService.draw(2);
+  draw(amountToDraw: number) {
+    this.ticketsDrawn = this.ticketService.draw(+amountToDraw);
   }
 }

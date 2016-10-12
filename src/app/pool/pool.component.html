@@ -3,20 +3,21 @@
   <div>
     <label>Tickets:</label>
     <div>
-      <textarea name="ticketsString" required 
-        [(ngModel)]="ticketsString"></textarea>
+      <textarea name="ticketsString" required [(ngModel)]="ticketsString"></textarea>
     </div>
   </div>
-  <button type="submit"
-    [disabled]="!ticketsForm.valid">Save</button>
+  <button type="submit" [disabled]="!ticketsForm.valid">Save</button>
 </form>
 
 <h2>Pool</h2>
 <ul *ngFor="let ticket of tickets | async">
   <li>{{ticket.name}}</li>
 </ul>
-<button [disabled]="(tickets | async)?.length == 0"
-  (click)="draw()">Draw</button>
+<div>
+  Number of tickets to draw:
+  <input type="number" value="{{amountToDraw}}" [value]="amountToDraw" name="amountToDraw" #amountToDrawInput>
+</div>
+<button [disabled]="(tickets | async)?.length == 0" (click)="draw(amountToDrawInput.value)">Draw</button>
 
 <h2>Draw</h2>
 <ul *ngFor="let ticket of ticketsDrawn | async">
