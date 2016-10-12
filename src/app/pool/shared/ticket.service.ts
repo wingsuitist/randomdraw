@@ -21,9 +21,12 @@ export class TicketService {
     return this.getAll().map(
       (tickets) => {
         const drawnTickets: Ticket[] = [];
-        for(let ticket of tickets) {
-          if(drawnTickets.length <= amount) {
-            drawnTickets.push(ticket);
+        while(drawnTickets.length < amount) {
+          let randomKey = Math.floor(Math.random() * tickets.length);
+          drawnTickets.push(tickets[randomKey]);
+          tickets.splice(randomKey);
+          if(tickets.length < (amount-drawnTickets.length)) {
+            break;
           }
         }
         return drawnTickets;
