@@ -9,8 +9,8 @@ import { TicketService, Ticket } from './shared';
   styleUrls: ['./pool.component.css']
 })
 export class PoolComponent implements OnInit {
-  tickets: Observable<Ticket[]>;
-  ticketsDrawn: Observable<Ticket[]>;
+  tickets: Ticket[];
+  ticketsDrawn: Ticket[];
   amountToDraw: number = 2;
   ticketsString: string = '';
 
@@ -19,31 +19,38 @@ export class PoolComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.tickets = this.ticketService.getAll();
-    this.tickets.subscribe(
-      (tickets) => {
-        this.ticketsString = '';
-        tickets.map(ticket => {
-          this.ticketsString += "\n" + ticket.name;
-        })
-      }
-    )
+    this.fetchTickets(this.ticketService.getAll())
   }
 
   replace() {
-    const tickets = [];
+    const newTickets = [];
     let currentId = 0;
     this.ticketsString.split("\n").map(
       (line) => {
-        tickets.unshift(
-          new Ticket(currentId, line.trim())
-        );
+        if(line.length > 0) {
+          newTickets.unshift(new Ticket(currentId, line.trim()));
+        }
       }
     );
-    this.tickets = this.ticketService.replace(tickets);
+    this.fetchTickets(this.ticketService.replace(newTickets));
+  }
+  
+  fetchTickets(ticketObs: Observable<Ticket[]>) {
+    ticketObs.subscribe((tickets) => {
+        this.tickets = tickets;
+        this.ticketsString = '';
+        this.tickets.map((ticket, index) => {
+          this.ticketsString += index > 0 ? "\n" : "";
+          this.ticketsString += ticket.name;
+          return ticket;
+        });
+    });
   }
 
   draw(amountToDraw: number) {
-    this.ticketsDrawn = this.ticketService.draw(+amountToDraw);
+    this.ticketService.draw(+amountToDraw).subscribe(
+      (ticketsDrawn) => {
+        this.ticketsDrawn = ticketsDrawn;
+      });
   }
 }

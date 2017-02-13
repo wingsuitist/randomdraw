@@ -10,16 +10,16 @@
 </form>
 
 <h2>Pool</h2>
-<ul *ngFor="let ticket of tickets | async">
+<ul *ngFor="let ticket of tickets">
   <li>{{ticket.name}}</li>
 </ul>
 <div>
   Number of tickets to draw:
   <input type="number" value="{{amountToDraw}}" [value]="amountToDraw" name="amountToDraw" #amountToDrawInput>
 </div>
-<button [disabled]="(tickets | async)?.length == 0" (click)="draw(amountToDrawInput.value)">Draw</button>
+<button [disabled]="tickets?.length == 0" (click)="draw(amountToDrawInput.value)">Draw</button>
 
 <h2>Draw</h2>
-<ul *ngFor="let ticket of ticketsDrawn | async">
+<ul *ngFor="let ticket of ticketsDrawn">
   <li>{{ticket.name}}</li>
 </ul>

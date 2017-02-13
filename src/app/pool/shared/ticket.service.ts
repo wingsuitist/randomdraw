@@ -8,24 +8,33 @@ import { Ticket } from './ticket.model';
 
 @Injectable()
 export class TicketService {
-  private tickets: Observable<Ticket[]> = Observable.of([]);
+  private tickets: Ticket[] = [
+    new Ticket(1, "Paula"),
+    new Ticket(1, "Petra"),
+    new Ticket(1, "Pia"),
+    new Ticket(1, "Peter"),
+    new Ticket(1, "Paul"),
+    new Ticket(1, "Pius"),
+    new Ticket(1, "Pablo")
+  ];
 
   constructor() { }
 
   replace(tickets: Ticket[]): Observable<Ticket[]> {
-    this.tickets = Observable.of(tickets);
-    return this.tickets;
+    this.tickets = tickets;
+    return Observable.of(this.tickets);
   }
 
   draw(amount: number): Observable<Ticket[]> {
     return this.getAll().map(
       (tickets) => {
+        const ticketPool = tickets.slice()
         const drawnTickets: Ticket[] = [];
         while(drawnTickets.length < amount) {
-          let randomKey = Math.floor(Math.random() * tickets.length);
-          drawnTickets.push(tickets[randomKey]);
-          tickets.splice(randomKey);
-          if(tickets.length < (amount-drawnTickets.length)) {
+          let randomKey = Math.floor(Math.random() * ticketPool.length);
+          drawnTickets.push(ticketPool[randomKey]);
+          ticketPool.splice(randomKey);
+          if(ticketPool.length < (amount-drawnTickets.length)) {
             break;
           }
         }
@@ -35,6 +44,6 @@ export class TicketService {
   }
 
   getAll(): Observable<Ticket[]> {
-    return this.tickets;
+    return Observable.of(this.tickets);
   }
 }
