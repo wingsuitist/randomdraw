@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
+import * as _ from 'lodash';
 
 import { Ticket } from './ticket.model';
 
@@ -28,17 +29,7 @@ export class TicketService {
   draw(amount: number): Observable<Ticket[]> {
     return this.getAll().map(
       (tickets) => {
-        const ticketPool = tickets.slice()
-        const drawnTickets: Ticket[] = [];
-        while(drawnTickets.length < amount) {
-          let randomKey = Math.floor(Math.random() * ticketPool.length);
-          drawnTickets.push(ticketPool[randomKey]);
-          ticketPool.splice(randomKey);
-          if(ticketPool.length < (amount-drawnTickets.length)) {
-            break;
-          }
-        }
-        return drawnTickets;
+        return _.sampleSize(tickets, amount);
       }
     );
   }
